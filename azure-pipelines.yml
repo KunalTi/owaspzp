@@ -38,7 +38,7 @@ stages:
         $XslTransform.Load($XslPath)
         ls
         pwd
-        cp /home/vsts/work/1/s/xml_report.xml ($System.DefaultWorkingDirectory)\tests\
+        cp ($System.DefaultWorkingDirectory)\xml_report.xml ($System.DefaultWorkingDirectory)\tests\
         $XslTransform.Transform($XmlInputPath, $XmlOutputPath)
       displayName: 'PowerShell Script'
 
@@ -51,5 +51,5 @@ stages:
       
     - powershell: |
         pwd
-        ls
+        ls ($System.DefaultWorkingDirectory)\tests\
       displayName: 'List Contents of tests Directory'
