@@ -49,6 +49,7 @@ stages:
         testResultsFormat: 'NUnit'
         testResultsFiles: 'converted_report.xml'
       
-    - script: |
-        ls $(System.DefaultWorkingDirectory)/tests/
+    - powershell: |
+        pwd
+        ls
       displayName: 'List Contents of tests Directory'
