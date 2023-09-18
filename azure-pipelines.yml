@@ -8,11 +8,11 @@ stages:
       vmImage: 'ubuntu-latest'
     steps:
     - bash: |
-        # Pull the InfluxDB Docker image
-        sudo docker pull influxdb
-        # Run the InfluxDB container
-        sudo docker run -d -p 80:80 influxdb
-      displayName: 'Pull and Run InfluxDB Container'
+        # Pull the nginx Docker image
+        sudo docker pull nginx
+        # Run the nginx container
+        sudo docker run -d -p 80:80 nginx
+      displayName: 'Pull and Run nginx Container'
 
     - bash: |
         sudo chmod -R 777 ./
