@@ -38,6 +38,7 @@ stages:
         $XslTransform.Load($XslPath)
         ls
         pwd
+        mv /home/vsts/work/1/s/xml_report.xml ($System.DefaultWorkingDirectory)\tests\
         $XslTransform.Transform($XmlInputPath, $XmlOutputPath)
       displayName: 'PowerShell Script'
 
