@@ -26,16 +26,9 @@ stages:
       displayName: 'Owasp Container Scan'
 
     - powershell: |
-        # Replace this PowerShell script with your desired functionality
-        Write-Host "This is a sample PowerShell script."
-        # You can add your PowerShell commands here
+        # Check PowerShell Core version
+        pwsh --version
 
-        # For example, create a sample text file
-        $FilePath = "$(System.DefaultWorkingDirectory)/sample.txt"
-        "This is a sample text." | Out-File -FilePath $FilePath
-
-        # Display the contents of the text file
-        Get-Content $FilePath
       displayName: 'PowerShell Script'
 
     - task: PublishTestResults@2
