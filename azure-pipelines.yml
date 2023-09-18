@@ -39,9 +39,7 @@ stages:
         ls
         pwd
         cp /home/vsts/work/1/s/xml_report.xml ($System.DefaultWorkingDirectory)\tests\
-        ls $(System.DefaultWorkingDirectory)/tests/
         $XslTransform.Transform($XmlInputPath, $XmlOutputPath)
-        ls $(System.DefaultWorkingDirectory)/tests/
       displayName: 'PowerShell Script'
 
 
@@ -50,3 +48,7 @@ stages:
       inputs:
         testResultsFormat: 'NUnit'
         testResultsFiles: 'converted_report.xml'
+      
+    - script: |
+        ls $(System.DefaultWorkingDirectory)/tests/
+      displayName: 'List Contents of tests Directory'
