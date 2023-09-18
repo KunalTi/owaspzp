@@ -22,7 +22,7 @@ stages:
 
     - powershell: |
         # Change the working directory to the location of the XSLT file
-        Set-Location -Path "$(System.DefaultWorkingDirectory)/s/owaspzp/"
+        Set-Location -Path "$(Build.ArtifactStagingDirectory)/s/owaspzp/"
 
         # Verify the current directory
         Get-Location
