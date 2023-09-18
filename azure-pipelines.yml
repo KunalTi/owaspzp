@@ -23,7 +23,7 @@ stages:
 
     - bash: |
         sudo chmod -R 777 ./
-        sudo docker run --rm -v $(pwd):/zap/wrk/:rw -t owasp/zap2docker-stable zap-full-scan.py -t http://$(ip -f inet -o addr show docker0 | awk '{print $4}' | cut -d '/' -f 1):80 -x '/home/vsts/work/1/s/xml_report.xml'
+        sudo docker run --rm -v $(pwd):/zap/wrk/:rw -t owasp/zap2docker-stable zap-full-scan.py -t http://$(ip -f inet -o addr show docker0 | awk '{print $4}' | cut -d '/' -f 1):80 -x 'xml_report.xml'
         true
         ls
         pwd
