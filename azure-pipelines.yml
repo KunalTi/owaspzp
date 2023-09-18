@@ -1,37 +1,28 @@
-trigger:
-- none
-
-pool:
-  vmImage: 'ubuntu-latest'
+trigger: none
 
 stages:
-- stage: Build
+- stage: 'buildstage'
   jobs:
-  - job: BuildJob
+  - job: 'buildjob'
+    pool:
+      vmImage: 'ubuntu-latest'
     steps:
-    - task: UsePythonVersion@0
-      inputs:
-        versionSpec: '3.x'
-        addToPath: true
-
-    - script: |
+    - bash: |
         # Pull the InfluxDB Docker image
-        docker pull influxdb
+        sudo docker pull influxdb
         # Run the InfluxDB container
-        docker run -d -p 80:80 influxdb
+        sudo docker run -d -p 80:80 influxdb
       displayName: 'Pull and Run InfluxDB Container'
 
-    - script: |
-        # Make sure the current directory has appropriate permissions
-        chmod -R 777 .
-
-        # Run the Owasp Zap container
-        docker run --rm -v $(pwd):/zap/wrk/:rw -t owasp/zap2docker-stable zap-full-scan.py -t http://$(ip -f inet -o addr show docker0 | awk '{print $4}' | cut -d '/' -f 1):80 -x xml_report.xml
+    - bash: |
+        sudo chmod -R 777 ./
+        sudo docker run --rm -v $(pwd):/zap/wrk/:rw -t owasp/zap2docker-stable zap-full-scan.py -t http://$(ip -f inet -o addr show docker0 | awk '{print $4}' | cut -d '/' -f 1):80 -x xml_report.xml
+        true
       displayName: 'Owasp Container Scan'
 
     - powershell: |
         # Change the working directory to the location of the XSLT file
-        Set-Location -Path "$(System.DefaultWorkingDirectory)/s/owaspzp/"
+        Set-Location -Path "$(System.DefaultWorkingDirectory)/s/owaspzp/
 
         # Load the XSLT file
         $XslPath = "xml_to_nunit.xslt"
@@ -39,7 +30,8 @@ stages:
         $XmlOutputPath = "$(System.DefaultWorkingDirectory)/s/owaspzp/converted_report.xml"
         $XslTransform = New-Object System.Xml.Xsl.XslCompiledTransform
         $XslTransform.Load($XslPath)
-      displayName: 'PowerShell Script'
+
+        displayName: 'PowerShell Script'
 
     - task: PublishTestResults@2
       displayName: 'Publish Test Results'
