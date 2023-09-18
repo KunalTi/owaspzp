@@ -2,7 +2,7 @@ resources:
   repositories:
     - repository: owaspzp
       type: git
-      name: KunalTi.owaspzp/owaspzp
+      name: kunalt/owaspzp
       ref: refs/heads/main
 
 trigger: none
