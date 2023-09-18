@@ -21,7 +21,12 @@ stages:
       displayName: 'Owasp Container Scan'
 
     - powershell: |
-        Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)/s/owaspzp/"
+        $XslPath = "$(System.DefaultWorkingDirectory)/s/owaspzp/xml_to_nunit.xslt" 
+        $XmlInputPath = "$(System.DefaultWorkingDirectory)/tests/xml_report.xml"
+        $XmlOutputPath = "$(System.DefaultWorkingDirectory)/tests/converted_report.xml"
+        $XslTransform = New-Object System.Xml.Xsl.XslCompiledTransform
+        $XslTransform.Load($XslPath)
+        $XslTransform.Transform($XmlInputPath, $XmlOutputPath)
       displayName: 'PowerShell Script'
 
     - task: PublishTestResults@2
