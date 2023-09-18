@@ -39,6 +39,7 @@ stages:
         ls
         pwd
         cp /home/vsts/work/1/s/xml_report.xml ($System.DefaultWorkingDirectory)\tests\
+        cat xml_report.xml
         $XslTransform.Transform($XmlInputPath, $XmlOutputPath)
       displayName: 'PowerShell Script'
 
