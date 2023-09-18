@@ -14,9 +14,9 @@ stages:
 
     - bash: |
         # Pull the Nginx Docker image (or replace with an image suitable for testing)
-        sudo docker pull nginx
+        sudo docker pull influxdb
         # Run the Nginx container
-        sudo docker run -d -p 80:80 nginx
+        sudo docker run -d -p 80:80 influxdb
       displayName: 'Pull and Run Nginx Container'
 
     - bash: |
