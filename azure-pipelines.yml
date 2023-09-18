@@ -9,7 +9,7 @@ stages:
     steps:
     - bash: |
         # Pull the nginx Docker image
-        sudo docker pull nginx
+        sudo docker pull nginx:latest
         # Run the nginx container
         sudo docker run -d -p 80:80 nginx
       displayName: 'Pull and Run nginx Container'
@@ -20,14 +20,33 @@ stages:
         true
       displayName: 'Owasp Container Scan'
 
+    # Generate the xml_to_nunit.xslt file
     - powershell: |
-        $XslPath = "$(System.DefaultWorkingDirectory)/s/owaspzp/xml_to_nunit.xslt" 
-        $XmlInputPath = "$(System.DefaultWorkingDirectory)/tests/xml_report.xml"
-        $XmlOutputPath = "$(System.DefaultWorkingDirectory)/tests/converted_report.xml"
+        # Change the working directory to the location where you want to generate the XSLT file
+        Set-Location -Path "$(System.DefaultWorkingDirectory)/s/owaspzp/"
+
+        # Create the XSLT content and save it to xml_to_nunit.xslt
+        @"
+        <?xml version="1.0" encoding="UTF-8"?>
+        <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+            <!-- Your XSLT content here -->
+        </xsl:stylesheet>
+        "@ | Set-Content -Path "xml_to_nunit.xslt"
+      displayName: 'Generate XSLT File'
+
+    # Perform the OWASP ZAP report transformation
+    - powershell: |
+        # Change the working directory to the location of the XSLT file
+        Set-Location -Path "$(System.DefaultWorkingDirectory)/s/owaspzp/"
+
+        # Load the XSLT file
+        $XslPath = "xml_to_nunit.xslt"
+        $XmlInputPath = "xml_report.xml"
+        $XmlOutputPath = "converted_report.xml"
         $XslTransform = New-Object System.Xml.Xsl.XslCompiledTransform
         $XslTransform.Load($XslPath)
         $XslTransform.Transform($XmlInputPath, $XmlOutputPath)
-      displayName: 'PowerShell Script'
+      displayName: 'Transform OWASP ZAP Report'
 
     - task: PublishTestResults@2
       displayName: 'Publish Test Results'
