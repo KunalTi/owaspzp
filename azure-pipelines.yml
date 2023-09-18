@@ -37,9 +37,6 @@ stages:
         $XmlOutputPath = "/home/vsts/work/1/s/converted_report.xml"
         $XslTransform = New-Object System.Xml.Xsl.XslCompiledTransform
         $XslTransform.Load($XslPath)
-        ls
-        pwd
-        cp /home/vsts/work/1/s/xml_report.xml ($System.DefaultWorkingDirectory)\tests\
         $XslTransform.Transform($XmlInputPath, $XmlOutputPath)
       displayName: 'PowerShell Script'
 
@@ -48,4 +45,4 @@ stages:
       displayName: 'Publish Test Results'
       inputs:
         testResultsFormat: 'NUnit'
-        testResultsFiles: '/home/vsts/work/1/s/converted_report.xml'
+        testResultsFiles: 'converted_report.xml'
