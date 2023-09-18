@@ -1,3 +1,10 @@
+resources:
+  repositories:
+    - repository: owaspzp
+      type: git
+      name: KunalTi/owaspzp
+      ref: refs/heads/main
+
 trigger: none
 
 stages:
