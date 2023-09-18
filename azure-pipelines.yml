@@ -21,11 +21,7 @@ stages:
       displayName: 'Owasp Container Scan'
 
     - powershell: |
-        # Change the working directory to the location of the XSLT file
-        Set-Location -Path "$(Build.ArtifactStagingDirectory)/s/owaspzp/"
-
-        # Verify the current directory
-        Get-Location
+        Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)/s/owaspzp/"
       displayName: 'PowerShell Script'
 
     - task: PublishTestResults@2
