@@ -24,6 +24,7 @@ stages:
     - bash: |
         sudo chmod -R 777 ./
         sudo docker run --rm -v $(pwd):/zap/wrk/:rw -t owasp/zap2docker-stable zap-full-scan.py -t http://$(ip -f inet -o addr show docker0 | awk '{print $4}' | cut -d '/' -f 1):80 -x xml_report.xml
+        ls
         true
       displayName: 'Owasp Container Scan'
 
@@ -34,6 +35,7 @@ stages:
         $XmlOutputPath = "converted_report.xml"
         $XslTransform = New-Object System.Xml.Xsl.XslCompiledTransform
         $XslTransform.Load($XslPath)
+        ls
         $XslTransform.Transform($XmlInputPath, $XmlOutputPath)
       displayName: 'PowerShell Script'
 
