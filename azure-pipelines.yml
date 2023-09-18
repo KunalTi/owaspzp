@@ -2,7 +2,7 @@ resources:
   repositories:
     - repository: owaspzp
       type: git
-      name: kunalt/Hello
+      name: kunalt/kunalt
       ref: refs/heads/main
 
 trigger: none
