@@ -36,13 +36,13 @@ stages:
         script: |
           sudo wget https://udomain.dl.sourceforge.net/project/saxon/Saxon-HE/10/Java/SaxonHE10-3J.zip
           sudo unzip SaxonHE10-3J.zip 
-          sleep 5
-          mkdir $(System.DefaultWorkingDirectory)/tests/
-          cp $(System.DefaultWorkingDirectory)/xml_report.xml $(System.DefaultWorkingDirectory)/tests/xml_report.xml
     - task: Bash@3
       inputs:
         targetType: 'inline'
-        script: 'java -jar saxon-he-10.3.jar -xsl:xml_to_nunit.xslt -s:$(System.DefaultWorkingDirectory)/tests/xml_report.xml -o:converted_report.xml'
+        script: |
+          java -jar saxon-he-10.3.jar -xsl:xml_to_nunit.xslt -s:$(System.DefaultWorkingDirectory)/xml_report.xml -o:converted_report.xml
+          mkdir $(System.DefaultWorkingDirectory)/tests
+          cp $(System.DefaultWorkingDirectory)/xml_report.xml $(System.DefaultWorkingDirectory)/tests/xml_report.xml
       displayName: 'Report generation'
 
 
