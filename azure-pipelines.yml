@@ -34,8 +34,8 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          wget https://udomain.dl.sourceforge.net/project/saxon/Saxon-HE/10/Java/SaxonHE10-3J.zip
-          unzip SaxonHE10-3J.zip 
+          sudo wget https://udomain.dl.sourceforge.net/project/saxon/Saxon-HE/10/Java/SaxonHE10-3J.zip
+          sudo unzip SaxonHE10-3J.zip 
           sleep 5
           mkdir $(System.DefaultWorkingDirectory)/tests/
           cp $(System.DefaultWorkingDirectory)/xml_report.xml $(System.DefaultWorkingDirectory)/tests/xml_report.xml
