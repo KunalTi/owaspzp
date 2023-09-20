@@ -29,6 +29,19 @@ stages:
         pwd
         true
       displayName: 'Owasp Container Scan'
+      
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+          wget https://udomain.dl.sourceforge.net/project/saxon/Saxon-HE/10/Java/SaxonHE10-3J.zip
+          unzip SaxonHE10-3J.zip
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: 'java -jar saxon-he-10.3.jar -xsl:xml_to_nunit.xslt -s:$(System.DefaultWorkingDirectory)/tests/xml_report.xml -o:converted_report.xml'
+      displayName: 'Report generation'
+
 
     # - powershell: |
 
@@ -45,4 +58,4 @@ stages:
       displayName: 'Publish Test Results'
       inputs:
         testResultsFormat: 'NUnit'
-        testResultsFiles: 'xml_report.xml'
+        testResultsFiles: 'converted_report.xml'
