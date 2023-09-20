@@ -87,8 +87,8 @@ stages:
     - bash: |
         sudo chmod -R 777 ./
         mkdir $(System.DefaultWorkingDirectory)/tests
-        sudo docker run --rm -v $(pwd):/zap/wrk/:rw -t owasp/zap2docker-stable zap-full-scan.py -t http://$(ip -f inet -o addr show docker0 | awk '{print $4}' | cut -d '/' -f 1):80 -x '$(System.DefaultWorkingDirectory)/tests/xml_report.xml'
-        true
+        sudo docker run --rm -v $(pwd):/zap/wrk/:rw -t owasp/zap2docker-stable zap-full-scan.py -t http://$(ip -f inet -o addr show docker0 | awk '{print $4}' | cut -d '/' -f 1):80 -x '$(System.DefaultWorkingDirectory)/xml_report.xml'
+        cp $(System.DefaultWorkingDirectory)/xml_report.xml $(System.DefaultWorkingDirectory)/tests/xml_report.xml
         ls
         pwd
         true
@@ -104,7 +104,7 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          java -jar saxon-he-10.3.jar -xsl:xml_to_nunit.xslt -s:$(System.DefaultWorkingDirectory)/tests/xml_report.xml -o:$(System.DefaultWorkingDirectory)/converted_report.xml
+          java -jar saxon-he-10.3.jar -xsl:xml_to_nunit.xslt -s:$(System.DefaultWorkingDirectory)/xml_report.xml -o:$(System.DefaultWorkingDirectory)/converted_report.xml
           ls
           cp $(System.DefaultWorkingDirectory)/converted_report.xml $(Agent.TempDirectory)/converted_report.xml
       displayName: 'Report generation'
