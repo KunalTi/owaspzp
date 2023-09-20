@@ -41,8 +41,7 @@ stages:
         targetType: 'inline'
         script: |
           java -jar saxon-he-10.3.jar -xsl:xml_to_nunit.xslt -s:$(System.DefaultWorkingDirectory)/xml_report.xml -o:converted_report.xml
-          mkdir $(System.DefaultWorkingDirectory)/tests
-          cp $(System.DefaultWorkingDirectory)/xml_report.xml $(System.DefaultWorkingDirectory)/tests/xml_report.xml
+          ls
       displayName: 'Report generation'
 
 
