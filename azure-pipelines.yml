@@ -35,7 +35,8 @@ stages:
         targetType: 'inline'
         script: |
           wget https://udomain.dl.sourceforge.net/project/saxon/Saxon-HE/10/Java/SaxonHE10-3J.zip
-          unzip SaxonHE10-3J.zip
+          unzip SaxonHE10-3J.zip 
+          sleep 5
           mkdir $(System.DefaultWorkingDirectory)/tests/
           cp $(System.DefaultWorkingDirectory)/xml_report.xml $(System.DefaultWorkingDirectory)/tests/xml_report.xml
     - task: Bash@3
