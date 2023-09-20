@@ -45,4 +45,4 @@ stages:
       displayName: 'Publish Test Results'
       inputs:
         testResultsFormat: 'NUnit'
-        testResultsFiles: 'converted_report.xml'
+        testResultsFiles: 'xml_report.xml'
