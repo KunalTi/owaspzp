@@ -104,9 +104,9 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          java -jar saxon-he-10.3.jar -xsl:xml_to_nunit.xslt -s:$(System.DefaultWorkingDirectory)/xml_report.xml -o:$(System.DefaultWorkingDirectory)/converted_report.xml
+          java -jar saxon-he-10.3.jar -xsl:xml_to_nunit.xslt -s:$(System.DefaultWorkingDirectory)/tests/xml_report.xml -o:$(System.DefaultWorkingDirectory)/converted_report.xml
           ls
-          cp converted_report.xml $(Agent.TempDirectory)/converted_report.xml
+          cp $(System.DefaultWorkingDirectory)/converted_report.xml $(Agent.TempDirectory)/converted_report.xml
       displayName: 'Report generation'
 
     - task: PublishTestResults@2
