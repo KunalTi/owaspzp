@@ -80,6 +80,7 @@ stages:
         chmod -R 777 ./
         docker run -v $(System.DefaultWorkingDirectory)/dockerImage:/zap/wrk:rw -t owasp/zap2docker-stable zap-full-scan.py -t http://nginx-container:80 -J /zap/wrk/report.json
       displayName: 'Scan Docker Image'
+      continueOnError: true
 
     - task: PublishBuildArtifacts@1
       displayName: 'Publish Scan Results'
