@@ -60,6 +60,8 @@ resources:
 
 trigger: none
 
+pr: none
+
 pool:
   vmImage: 'windows-latest'
 
@@ -68,22 +70,22 @@ jobs:
   steps:
   - checkout: self
 
-  - powershell: |
-      # Pull the Windows-based nginx Docker image
-      docker pull mcr.microsoft.com/windows/servercore/iis:windowsservercore-ltsc2019
+  - bash: |
+      # Pull the nginx Docker image
+      docker pull nginx:latest
       # Run the nginx container
-      docker run -d -p 80:80 mcr.microsoft.com/windows/servercore/iis:windowsservercore-ltsc2019
+      docker run -d -p 80:80 nginx
     displayName: 'Pull and Run nginx Container'
 
-  - powershell: |
-      Get-ChildItem -Recurse | ForEach-Object { $_.IsReadOnly = $false }
-      docker run --rm -v $(System.DefaultWorkingDirectory):/zap/wrk/:rw -t owasp/zap2docker-stable zap-full-scan.py -t http://$(Get-NetIPAddress -InterfaceAlias docker0 | Where-Object { $_.AddressFamily -eq 'IPv4' }).IPAddress.IPAddressToString:80 -x 'xml_report.xml'
+  - bash: |
+      chmod -R 777 ./
+      docker run --rm -v $(System.DefaultWorkingDirectory):/zap/wrk/:rw -t owasp/zap2docker-stable zap-full-scan.py -t http://$(ipconfig.exe | findstr /i "ipv4" | findstr /v /i "127.0.0.1" | awk '{print $NF}'):80 -x 'xml_report.xml'
       true
       ls
       pwd
       true
-      Invoke-WebRequest -Uri 'https://udomain.dl.sourceforge.net/project/saxon/Saxon-HE/10/Java/SaxonHE10-3J.zip' -OutFile 'SaxonHE10-3J.zip'
-      Expand-Archive -Path 'SaxonHE10-3J.zip' -DestinationPath '.'
+      wget https://udomain.dl.sourceforge.net/project/saxon/Saxon-HE/10/Java/SaxonHE10-3J.zip
+      unzip SaxonHE10-3J.zip 
       java -jar saxon-he-10.3.jar -xsl:xml_to_nunit.xslt -s:$(System.DefaultWorkingDirectory)/xml_report.xml -o:converted_report.xml
       ls
     displayName: 'Report generation'
