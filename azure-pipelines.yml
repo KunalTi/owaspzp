@@ -78,7 +78,7 @@ stages:
 
     - script: |
         chmod -R 777 ./
-        docker run -v $(System.DefaultWorkingDirectory)/dockerImage:/zap/wrk:rw -t owasp/zap2docker-stable zap-full-scan.py -t http://nginx-container:80 -J /zap/wrk/report.json
+        docker run -v $(System.DefaultWorkingDirectory)/dockerImage:/zap/wrk:rw -t owasp/zap2docker-stable zap-full-scan.py -t http://$(ip -f inet -o addr show docker0 | awk '{print $4}' | cut -d '/' -f 1):80 -J /zap/wrk/report.json
       displayName: 'Scan Docker Image'
       continueOnError: true
 
