@@ -65,7 +65,7 @@ stages:
   jobs:
   - job: 'buildjob'
     pool:
-      vmImage: 'ubuntu-latest'
+      vmImage: 'windows-latest'
     steps:
     - bash: |
         # Pull the nginx Docker image
