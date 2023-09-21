@@ -119,4 +119,4 @@ stages:
     - task: PublishTestResults@2
       inputs:
         testResultsFormat: 'NUnit'
-        testResultsFiles: '$(Pipeline.Workspace)/converted_report.xml'
+        testResultsFiles: '$(Pipeline.Workspace)/TestResults/converted_report.xml'
