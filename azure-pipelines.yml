@@ -60,39 +60,42 @@ resources:
 
 trigger: none
 
-pr: none
+stages:
+- stage: 'buildstage'
+  jobs:
+  - job: 'buildjob'
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - script: |
+        # Pull the nginx Docker image
+        sudo docker pull nginx:latest
+        # Run the nginx container
+        sudo docker run -d -p 80:80 nginx
+      displayName: 'Pull and Run nginx Container'
 
-pool:
-  vmImage: 'windows-latest'
+    - script: |
+        sudo chmod -R 777 ./
+        sudo docker run --rm -v $(pwd):/zap/wrk/:rw -t owasp/zap2docker-stable zap-full-scan.py -t http://$(ip -f inet -o addr show docker0 | awk '{print $4}' | cut -d '/' -f 1):80 -x 'xml_report.xml'
+        true
+        ls
+        pwd
+        true
+        sudo wget https://udomain.dl.sourceforge.net/project/saxon/Saxon-HE/10/Java/SaxonHE10-3J.zip
+        sudo unzip SaxonHE10-3J.zip 
+        java -jar saxon-he-10.3.jar -xsl:xml_to_nunit.xslt -s:$(System.DefaultWorkingDirectory)/xml_report.xml -o:$(System.DefaultWorkingDirectory)/converted_report.xml
+        ls
+      displayName: 'Report generation'
 
-jobs:
-- job: 'buildjob'
-  steps:
-  - checkout: self
-
-  - bash: |
-      # Pull the nginx Docker image
-      docker pull nginx:latest
-      # Run the nginx container
-      docker run -d -p 80:80 nginx
-    displayName: 'Pull and Run nginx Container'
-
-  - bash: |
-      chmod -R 777 ./
-      docker run --rm -v $(System.DefaultWorkingDirectory):/zap/wrk/:rw -t owasp/zap2docker-stable zap-full-scan.py -t http://$(ipconfig.exe | findstr /i "ipv4" | findstr /v /i "127.0.0.1" | awk '{print $NF}'):80 -x 'xml_report.xml'
-      true
-      ls
-      pwd
-      true
-      wget https://udomain.dl.sourceforge.net/project/saxon/Saxon-HE/10/Java/SaxonHE10-3J.zip
-      unzip SaxonHE10-3J.zip 
-      java -jar saxon-he-10.3.jar -xsl:xml_to_nunit.xslt -s:$(System.DefaultWorkingDirectory)/xml_report.xml -o:converted_report.xml
-      ls
-    displayName: 'Report generation'
-
-  - task: PublishTestResults@2
-    inputs:
-      testResultsFormat: 'NUnit'
-      testResultsFiles: '**/converted_report.xml'
-      testRunTitle: 'OWASP ZAP Scan Results'
-    displayName: 'Publish OWASP ZAP Scan Results'
+- stage: 'publishstage'
+  jobs:
+  - job: 'publishjob'
+    pool:
+      vmImage: 'windows-latest'
+    steps:
+    - task: PublishTestResults@2
+      inputs:
+        testResultsFormat: 'NUnit'
+        testResultsFiles: '**/converted_report.xml'
+        testRunTitle: 'OWASP ZAP Scan Results'
+      displayName: 'Publish OWASP ZAP Scan Results'
