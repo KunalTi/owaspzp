@@ -60,8 +60,6 @@ resources:
 
 trigger: none
 
-pr: none
-
 pool:
   vmImage: 'windows-latest'
 
@@ -71,10 +69,10 @@ jobs:
   - checkout: self
 
   - powershell: |
-      # Pull the nginx Docker image
-      docker pull nginx:latest
+      # Pull the Windows-based nginx Docker image
+      docker pull mcr.microsoft.com/windows/servercore/iis:windowsservercore-ltsc2019
       # Run the nginx container
-      docker run -d -p 80:80 nginx
+      docker run -d -p 80:80 mcr.microsoft.com/windows/servercore/iis:windowsservercore-ltsc2019
     displayName: 'Pull and Run nginx Container'
 
   - powershell: |
