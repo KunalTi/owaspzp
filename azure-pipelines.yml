@@ -90,6 +90,7 @@ stages:
     - task: PublishTestResults@2
       inputs:
         testResultsFormat: 'NUnit'
-        testResultsFiles: 'converted_report.xml'
+        testResultsFiles: '**/xml_report.xml'
+        # testResultsFiles: '**/converted_report.xml'
         testRunTitle: 'OWASP ZAP Scan Results'
       displayName: 'Publish OWASP ZAP Scan Results'
