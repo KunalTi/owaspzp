@@ -96,17 +96,8 @@ stages:
     
 - stage: 'publishstage'
   jobs:
-  - job: 'dummyjob'
-    displayName: 'Dummy Job'
-    pool:
-      vmImage: 'ubuntu-latest'
-    steps:
-    - script: echo Dummy Job
-      displayName: 'Dummy Step'
-
-  - job: 'publishjob'
-    displayName: 'Publish Test Results'
-    dependsOn: 'dummyjob'
+  - job: 'downloadjob'
+    displayName: 'Download Test Results'
     pool:
       vmImage: 'ubuntu-latest'
     steps:
@@ -114,8 +105,14 @@ stages:
       inputs:
         artifact: 'TestResults'
         path: $(Pipeline.Workspace)
-    
+        
+  - job: 'publishjob'
+    displayName: 'Publish Test Results'
+    dependsOn: 'downloadjob'
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
     - task: PublishTestResults@2
       inputs:
         testResultsFormat: 'NUnit'
-        testResultsFiles: '**/converted_report.xml'
+        testResultsFiles: '$(Pipeline.Workspace)/converted_report.xml'
