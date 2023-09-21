@@ -43,16 +43,10 @@ stages:
           java -jar saxon-he-10.3.jar -xsl:xml_to_nunit.xslt -s:$(System.DefaultWorkingDirectory)/xml_report.xml -o:converted_report.xml
           ls
       displayName: 'Report generation'
-    
-    - task: PublishPipelineArtifact@1
-      inputs:
-        targetPath: 'converted_report.xml'
-        artifact: 'converted-report'
-      displayName: 'Publish Converted Report Artifact'
 
     - task: PublishTestResults@2
       inputs:
-        testResultsFormat: 'JUnit'
+        testResultsFormat: 'NUnit'
         testResultsFiles: 'converted_report.xml'
         testRunTitle: 'OWASP ZAP Scan Results'
       displayName: 'Publish OWASP ZAP Scan Results'
