@@ -112,6 +112,10 @@ stages:
     pool:
       vmImage: 'ubuntu-latest'
     steps:
+    - script: |
+        echo "Workspace: $(Pipeline.Workspace)"
+        ls -R $(Pipeline.Workspace)
+
     - task: PublishTestResults@2
       inputs:
         testResultsFormat: 'NUnit'
