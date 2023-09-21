@@ -108,9 +108,7 @@ stages:
         artifact: 'converted_report'
         path: '$(System.DefaultWorkingDirectory)'
       displayName: 'Download report artifact'
-
-    # Now you can use the converted_report.xml file in your Windows-based tasks as needed
-    - script: |
+    - powershell: |
         # Example: Display the contents of the downloaded file
         Get-Content $(System.DefaultWorkingDirectory)/converted_report.xml
       displayName: 'Display Contents of Converted Report'
