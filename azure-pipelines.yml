@@ -1,3 +1,56 @@
+# resources:
+#   repositories:
+#     - repository: owaspzp
+#       type: git
+#       name: kunalt/kunalt
+#       ref: refs/heads/main
+
+# trigger: none
+
+# stages:
+# - stage: 'buildstage'
+#   jobs:
+#   - job: 'buildjob'
+#     pool:
+#       vmImage: 'ubuntu-latest'
+#     steps:
+#     - bash: |
+#         # Pull the nginx Docker image
+#         sudo docker pull nginx:latest
+#         # Run the nginx container
+#         sudo docker run -d -p 80:80 nginx
+#       displayName: 'Pull and Run nginx Container'
+
+#     - bash: |
+#         sudo chmod -R 777 ./
+#         sudo docker run --rm -v $(pwd):/zap/wrk/:rw -t owasp/zap2docker-stable zap-full-scan.py -t http://$(ip -f inet -o addr show docker0 | awk '{print $4}' | cut -d '/' -f 1):80 -x 'xml_report.xml'
+#         true
+#         ls
+#         pwd
+#         true
+#       displayName: 'Owasp Container Scan'
+      
+#     - task: Bash@3
+#       inputs:
+#         targetType: 'inline'
+#         script: |
+#           sudo wget https://udomain.dl.sourceforge.net/project/saxon/Saxon-HE/10/Java/SaxonHE10-3J.zip
+#           sudo unzip SaxonHE10-3J.zip 
+#     - task: Bash@3
+#       inputs:
+#         targetType: 'inline'
+#         script: |
+#           java -jar saxon-he-10.3.jar -xsl:xml_to_nunit.xslt -s:$(System.DefaultWorkingDirectory)/xml_report.xml -o:converted_report.xml
+#           ls
+#       displayName: 'Report generation'
+
+#     - task: PublishTestResults@2
+#       inputs:
+#         testResultsFormat: 'NUnit'
+#         testResultsFiles: 'converted_report.xml'
+#         testRunTitle: 'OWASP ZAP Scan Results'
+#       displayName: 'Publish OWASP ZAP Scan Results'
+
 resources:
   repositories:
     - repository: owaspzp
@@ -28,20 +81,10 @@ stages:
         ls
         pwd
         true
-      displayName: 'Owasp Container Scan'
-      
-    - task: Bash@3
-      inputs:
-        targetType: 'inline'
-        script: |
-          sudo wget https://udomain.dl.sourceforge.net/project/saxon/Saxon-HE/10/Java/SaxonHE10-3J.zip
-          sudo unzip SaxonHE10-3J.zip 
-    - task: Bash@3
-      inputs:
-        targetType: 'inline'
-        script: |
-          java -jar saxon-he-10.3.jar -xsl:xml_to_nunit.xslt -s:$(System.DefaultWorkingDirectory)/xml_report.xml -o:converted_report.xml
-          ls
+        sudo wget https://udomain.dl.sourceforge.net/project/saxon/Saxon-HE/10/Java/SaxonHE10-3J.zip
+        sudo unzip SaxonHE10-3J.zip 
+        java -jar saxon-he-10.3.jar -xsl:xml_to_nunit.xslt -s:$(System.DefaultWorkingDirectory)/xml_report.xml -o:converted_report.xml
+        ls
       displayName: 'Report generation'
 
     - task: PublishTestResults@2
