@@ -60,12 +60,16 @@ resources:
 
 trigger: none
 
+pr:
+- '*'
+
+pool:
+  vmImage: 'ubuntu-latest'
+
 stages:
 - stage: 'buildstage'
   jobs:
   - job: 'buildjob'
-    pool:
-      vmImage: 'ubuntu-latest'
     steps:
     - script: |
         # Pull the nginx Docker image
@@ -87,15 +91,26 @@ stages:
         ls
       displayName: 'Report generation'
 
+    - task: PublishPipelineArtifact@1
+      inputs:
+        targetPath: '$(System.DefaultWorkingDirectory)'
+        artifact: 'converted_report'
+      displayName: 'Publish report artifact'
+
 - stage: 'publishstage'
   jobs:
   - job: 'publishjob'
     pool:
       vmImage: 'windows-latest'
     steps:
-    - task: PublishTestResults@2
+    - task: DownloadPipelineArtifact@2
       inputs:
-        testResultsFormat: 'NUnit'
-        testResultsFiles: '**/converted_report.xml'
-        testRunTitle: 'OWASP ZAP Scan Results'
-      displayName: 'Publish OWASP ZAP Scan Results'
+        artifact: 'converted_report'
+        path: '$(System.DefaultWorkingDirectory)'
+      displayName: 'Download report artifact'
+
+    # Now you can use the converted_report.xml file in your Windows-based tasks as needed
+    - script: |
+        # Example: Display the contents of the downloaded file
+        Get-Content $(System.DefaultWorkingDirectory)/converted_report.xml
+      displayName: 'Display Contents of Converted Report'
